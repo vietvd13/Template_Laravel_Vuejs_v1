@@ -1,5 +1,13 @@
+const config = require('./webpack.config');
 const mix = require('laravel-mix');
 
+function resolve(dir) {
+    return path.join(
+      __dirname,
+      '/resources/js',
+      dir
+    );
+  }
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -11,5 +19,21 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.webpackConfig(config);
+
+mix
+  .js('resources/js/app.js', 'public/js')
+  .extract([
+    'vue',
+    'axios',
+    'vuex',
+    'vue-router',
+    'vue-i18n',
+    'bootstrap-vue',
+  ])
+  .options({
+    processCssUrls: false,
+    postCss: [
+      require('autoprefixer'),
+    ],
+  });
